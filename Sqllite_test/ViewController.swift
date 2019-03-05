@@ -110,9 +110,9 @@ class ViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelega
             print("Hero saved successful")
         }
         
-        textFieldName.text = ""
-        textFieldRanking.text = ""
-        textfiledlike.text = ""
+//        textFieldName.text = ""
+//        textFieldRanking.text = ""
+//        textfiledlike.text = ""
         
         
         select()
@@ -176,7 +176,7 @@ class ViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelega
     }
     
     func select(){
-        let sql = "SELECT * FROM Prototype"
+        let sql = "SELECT * FROM Prototype WHERE datess"
         sqlite3_prepare(db,sql,-1,&pointer,nil)
         textView.text = ""
         var id : Int32
