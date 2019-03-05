@@ -29,19 +29,19 @@ class ViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelega
     var priorityTypes = ["ไม่ชอบ","ปานกลาง","ชอบ"]
     
     func createPickerView(){
-        let pickerView = UIPickerView()
-        pickerView.delegate = self
-        textfiledlike.inputView = pickerView
+//        let pickerView = UIPickerView()
+//        pickerView.delegate = self
+//        textfiledlike.inputView = pickerView
     }
     
     func dissmissPickerView(){
-        let toolBar = UIToolbar()
-        toolBar.sizeToFit()
-        
-        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(self.dissmissKeyboard))
-        toolBar.setItems([doneButton],animated:false)
-        toolBar.isUserInteractionEnabled = true
-        textfiledlike.inputAccessoryView = toolBar
+//        let toolBar = UIToolbar()
+//        toolBar.sizeToFit()
+//
+//        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(self.dissmissKeyboard))
+//        toolBar.setItems([doneButton],animated:false)
+//        toolBar.isUserInteractionEnabled = true
+//        textfiledlike.inputAccessoryView = toolBar
     }
     
     @objc func dissmissKeyboard(){
@@ -58,6 +58,7 @@ class ViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelega
     @IBAction func buttonSave(_ sender: Any) {
         
         
+        
         let currentDate = selectedDate.date
         let myFormatter = DateFormatter()
         myFormatter.dateFormat = "dd/MM/YYYY"
@@ -69,7 +70,7 @@ class ViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelega
         let employee = EmployeeName.text! as NSString
         let product = textFieldName.text! as NSString
         let place = textFieldRanking.text! as NSString
-        let likee = textfiledlike.text! as NSString
+        //let likee = textfiledlike.text! as NSString
 //        if(name?.isEmpty)!{
 //            print("Name is empty")
 //            return;
@@ -80,42 +81,82 @@ class ViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelega
 //        }
         
         
-        let insertQuery = "INSERT INTO Prototype (employee,product,place,datess,likee) VALUES (?,?,?,?,?)"
+//        let insertQuery = "INSERT INTO Prototype (employee,product,place,datess,likee) VALUES (?,?,?,?,?)"
+//
+//        if sqlite3_prepare(db,insertQuery,-1,&stmt,nil) != SQLITE_OK{
+//            print("Error binding query")
+//        }
+//
+//        if sqlite3_bind_text(stmt,1,employee.utf8String,-1,nil) != SQLITE_OK{
+//            print("Error binding name")
+//        }
+//
+//        if sqlite3_bind_text(stmt,2,product.utf8String,-1,nil) != SQLITE_OK{
+//            print("Error binding date")
+//        }
+//
+//        if sqlite3_bind_text(stmt,3,place.utf8String,-1,nil) != SQLITE_OK{
+//            print("Error binding date")
+//        }
+//
+//        if sqlite3_bind_text(stmt,4,currentDateText,-1,nil) != SQLITE_OK{
+//            print("Error binding date")
+//        }
+//
+//        if sqlite3_bind_text(stmt,5,likee.utf8String,-1,nil) != SQLITE_OK{
+//            print("Error binding date")
+//        }
+//
+//        if sqlite3_step(stmt) == SQLITE_DONE{
+//            print("Hero saved successful")
+//        }
         
-        if sqlite3_prepare(db,insertQuery,-1,&stmt,nil) != SQLITE_OK{
-            print("Error binding query")
-        }
+        let alert = UIAlertController(
+            title: "Input result",
+            message: "ใส่ข้อมูลให้ครบทุกช่อง",
+            preferredStyle: .alert
+        )
         
-        if sqlite3_bind_text(stmt,1,employee.utf8String,-1,nil) != SQLITE_OK{
-            print("Error binding name")
-        }
+        let btCancel = UIAlertAction(
+            title: "พอใจ",
+            style: .default,
+            handler: { _ in
+                let sql = "insert into Prototype values (null, '\(employee)', '\(product)', '\(place)', '\(currentDateText)','พอใจ')"
+                sqlite3_exec(self.db, sql, nil, nil, nil)
+                
+                self.select()
+        })
         
-        if sqlite3_bind_text(stmt,2,product.utf8String,-1,nil) != SQLITE_OK{
-            print("Error binding date")
-        }
+        let btOK = UIAlertAction(
+            title: "ปานกลาง",
+            style: .default,
+            handler: { _ in
+                let sql = "insert into Prototype values (null, '\(employee)', '\(product)', '\(place)', '\(currentDateText)','ปลานกลาง')"
+                sqlite3_exec(self.db, sql, nil, nil, nil)
+                
+                self.select()
+        } )
         
-        if sqlite3_bind_text(stmt,3,place.utf8String,-1,nil) != SQLITE_OK{
-            print("Error binding date")
-        }
-        
-        if sqlite3_bind_text(stmt,4,currentDateText,-1,nil) != SQLITE_OK{
-            print("Error binding date")
-        }
-        
-        if sqlite3_bind_text(stmt,5,likee.utf8String,-1,nil) != SQLITE_OK{
-            print("Error binding date")
-        }
-        
-        if sqlite3_step(stmt) == SQLITE_DONE{
-            print("Hero saved successful")
-        }
+        let btNot = UIAlertAction(
+            title: "แย่",
+            style: .default,
+            handler: { _ in
+                let sql = "insert into Prototype values (null, '\(employee)', '\(product)', '\(place)', '\(currentDateText)','แย่')"
+                sqlite3_exec(self.db, sql, nil, nil, nil)
+                
+                self.select()
+        } )
+        alert.addAction(btCancel)
+        alert.addAction(btOK)
+        alert.addAction(btNot)
+        present(alert, animated:true, completion: nil)
         
 //        textFieldName.text = ""
 //        textFieldRanking.text = ""
 //        textfiledlike.text = ""
         
         
-        select()
+        //select()
         
     }
     @IBAction func ButtonDelete(_ sender: Any) {
@@ -176,7 +217,7 @@ class ViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelega
     }
     
     func select(){
-        let sql = "SELECT * FROM Prototype WHERE datess"
+        let sql = "SELECT * FROM Prototype"
         sqlite3_prepare(db,sql,-1,&pointer,nil)
         textView.text = ""
         var id : Int32
